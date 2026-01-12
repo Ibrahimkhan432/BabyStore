@@ -7,9 +7,16 @@ import {
   Search,
   ShoppingCart
 } from "lucide-react"
+import { useCart } from "@/context/cart-context"
+import { ProductData } from "@/data/data"
+import { useSearch } from "@/context/search-context"
 
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false)
+  const { cart } = useCart()
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+  console.log("cart count:", cartCount)
+const {search,setSearch}=useSearch();
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative">
@@ -23,12 +30,14 @@ const Navbar: React.FC = () => {
       <div className="hidden sm:flex items-center gap-8">
 
         <Link href="/">Home</Link>
+        <Link href="/products">Products</Link>
         <Link href="/about">About</Link>
-        <Link href="/contact">Contact</Link>
 
         {/* Search */}
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             type="text"
             placeholder="Search products"
             className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
@@ -38,16 +47,13 @@ const Navbar: React.FC = () => {
 
         {/* Cart */}
         <div className="relative cursor-pointer">
-          <ShoppingCart size={18} className="text-indigo-600" />
-          <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] flex items-center justify-center rounded-full">
-            3
-          </span>
+          <Link href="/cart">
+            <ShoppingCart size={18} className="text-indigo-600" />
+            <span className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] flex items-center justify-center rounded-full">
+              {cartCount}
+            </span>
+          </Link>
         </div>
-
-        {/* Login */}
-        <button className="px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full">
-          Login
-        </button>
       </div>
 
       {/* Mobile Menu Button */}

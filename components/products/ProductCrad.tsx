@@ -1,49 +1,80 @@
 'use client';
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { MouseEvent } from 'react';
+import { useCart } from '@/context/cart-context';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ShoppingCart, Bolt } from 'lucide-react';
 
-const ProductCrad = ({ product }: { product: any }) => {
-    return (
-        <Link href={`/products/${product.id}`} className="block">
-            <div className="border border-gray-200 rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
-                <Image
-                    src={product.image}
-                    alt={product.title}
-                    width={300}
-                    height={200}
-                    className="w-full h-48 object-cover"
-                    unoptimized
-                />
-
-                <div className="p-4 text-sm">
-                    <p className="text-slate-600">$ {product.price}.00</p>
-                    <p className="text-slate-800 text-base font-medium my-1.5">
-                        {product.title}
-                    </p>
-                    <p className="text-slate-500">
-                        {product.description}
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-2 mt-4">
-                        <button 
-                            className="bg-slate-100 text-slate-600 py-2 rounded"
-                            onClick={(e: MouseEvent) => e.stopPropagation()} 
-                        >
-                            Add to cart
-                        </button>
-                        <button 
-                            className="bg-slate-800 text-white py-2 rounded"
-                            onClick={(e: MouseEvent) => e.stopPropagation()} 
-                        >
-                            Buy now
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </Link>
-    )
+interface ProductCardProps {
+  product: {
+    slug: string;
+    image: string;
+    title: string;
+    description: string;
+    price: number;
+  };
 }
 
-export default ProductCrad
+const ProductCard = ({ product }: ProductCardProps) => {
+  const { cart, addToCart } = useCart();
+
+  const cartCount = cart.find((item) => item.slug === product.slug)?.quantity || 0;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    addToCart(product);
+    alert(`${product.title} added to cart`);
+  };
+
+  return (
+    <Link
+      href={`/products/${product.slug}`}
+      className="block group"
+    >
+      <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 bg-white">
+        {/* Product Image */}
+        <div className="relative w-full h-56 md:h-64 lg:h-72 overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.title}
+            fill
+            className="object-cover w-full h-full transform transition-transform duration-300 group-hover:scale-105"
+            unoptimized
+          />
+        </div>
+
+        {/* Product Info */}
+        <div className="p-5 flex flex-col justify-between h-[220px] md:h-[240px]">
+          <div className="space-y-2">
+            <p className="text-indigo-600 font-semibold text-lg">${product.price.toFixed(2)}</p>
+            <h3 className="text-gray-900 font-medium text-base md:text-lg line-clamp-2">
+              {product.title}
+            </h3>
+            <p className="text-gray-500 text-sm line-clamp-2">{product.description}</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="mt-4 flex gap-2">
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {cartCount ? `${cartCount} Added` : 'Add to Cart'}
+            </button>
+            <button
+              type="button"
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+            >
+              <Bolt className="w-4 h-4" />
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default ProductCard;

@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         hostname: "static.pakwheels.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
     ],
   },
 };
