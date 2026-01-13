@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
   const { cart } = useCart()
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
   console.log("cart count:", cartCount)
-const {search,setSearch}=useSearch();
+  const { search, setSearch } = useSearch();
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative">
@@ -54,6 +54,11 @@ const {search,setSearch}=useSearch();
             </span>
           </Link>
         </div>
+        <Link href={'/auth/login'}>
+            <button className="cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm">
+              Login
+            </button>
+          </Link>
       </div>
 
       {/* Mobile Menu Button */}
@@ -71,10 +76,11 @@ const {search,setSearch}=useSearch();
           <Link href="/">Home</Link>
           <Link href="/about">About</Link>
           <Link href="/contact">Contact</Link>
-
-          <button className="px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm">
-            Login
-          </button>
+          <Link href={'/auth/login'}>
+            <button className="px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm">
+              Login
+            </button>
+          </Link>
         </div>
       )}
     </nav>
